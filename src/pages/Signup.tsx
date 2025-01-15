@@ -5,6 +5,8 @@ import { userSchema } from "../zod/userSchema";
 import { z } from "zod";
 import { useRegisterUserMutation } from "../store/authApi";
 import Loader from "../components/ui/Loader";
+import { replace, useNavigate } from "react-router-dom";
+import Alert from "../components/ui/Alert";
 const items = [
   {
     id: 0,
@@ -47,10 +49,22 @@ export default function Signup() {
     };
     try {
       //validating data with zod for checking valid email id, and checking other basics as password matching etc
-      debugger;
       const validate = userSchema.parse(userData);
       const validatedData = JSON.stringify(userData);
       const response = await registerUser({ userData }).unwrap();
+      if (response.status === "successful") {
+        setAlert({
+          showAlert: true,
+          success: true,
+          message: response.message,
+        });
+      } else {
+        setAlert({
+          showAlert: true,
+          success: false,
+          message: response.message,
+        });
+      }
     } catch (err) {
       if (err instanceof z.ZodError) {
         const formErrors = {};
@@ -60,14 +74,24 @@ export default function Signup() {
           }
         });
         setErrors(formErrors);
+      } else {
+        setAlert({
+          showAlert: true,
+          success: false,
+          message: err.data,
+        });
       }
     }
   };
 
   const [userType, setUserType] = useState<number>(0);
   const [country, setCountry] = useState<string>("");
+  const [alert, setAlert] = useState<Record<string, string | boolean>>({
+    showAlert: false,
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [registerUser, { isLoading }] = useRegisterUserMutation();
+  const navigate = useNavigate();
   if (isLoading)
     return (
       <div className="bg-slate-300 flex h-screen justify-center items-center w-full">
@@ -76,9 +100,29 @@ export default function Signup() {
     );
   return (
     <>
-      <div className="bg-slate-300 flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="bg-white h-auto max-w- rounded p-8">
+      <div className="bg-slate-300 flex min-h-screen flex-1 flex-col items-center justify-center px-6 py-12 lg:px-8">
+        {alert.showAlert && (
+          <Alert
+            isSuccess={alert.success}
+            message={alert.message}
+            handleAlert={
+              alert.success
+                ? () => navigate("/login", { replace: true })
+                : () => {
+                    setAlert({
+                      showAlert: false,
+                      message: "",
+                      success: false,
+                    });
+                  }
+            }
+          />
+        )}
+        <div className="bg-white h-auto w-fit rounded py-8 px-12">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+            {errors.response_error && (
+              <p className="text-red-500 text-md">{errors.response_error}</p>
+            )}
             <h2 className=" text-center text-2xl/9 font-bold tracking-tight text-blue-700">
               AAK
             </h2>

@@ -7,6 +7,7 @@ import { useRegisterUserMutation } from "../store/authApi";
 import Loader from "../components/ui/Loader";
 import { useNavigate } from "react-router-dom";
 import Alert from "../components/ui/Alert";
+import PasswordInput from "../components/ui/Password";
 const items = [
   {
     id: 0,
@@ -245,47 +246,19 @@ export default function Signup() {
                 )}
               </div>
               <div>
-                <label
-                  htmlFor="createPassword"
-                  className="block text-sm/6 font-medium text-gray-900"
-                >
-                  Create Password
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="createPassword"
-                    name="createPassword"
-                    type="password"
-                    required
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                  />
-                  {errors.createPassword && (
-                    <p className="text-red-500 text-sm mt-1">
-                      *{errors.createPassword}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm/6 font-medium text-gray-900"
-                >
-                  Confirm Password
-                </label>
-                <div className="mt-2">
-                  <input
+                <PasswordInput
+                  id="createPassword"
+                  name="createPassword"
+                  label="Create Password"
+                  error={errors.createPassword}
+                />
+                <div className="mt-6">
+                  <PasswordInput
                     id="confirmPassword"
                     name="confirmPassword"
-                    type="password"
-                    required
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    label="Confirm Password"
+                    error={errors.confirmPassword}
                   />
-                  {errors.confirmPassword && (
-                    <p className="text-red-500 text-sm mt-1">
-                      *{errors.confirmPassword}
-                    </p>
-                  )}
                 </div>
               </div>
               <div>

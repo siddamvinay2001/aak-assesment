@@ -126,8 +126,8 @@ export default function Signup() {
             }
           />
         )}
-        <div className="bg-white h-auto w-fit rounded py-8 px-12">
-          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="bg-white shadow-lg h-auto md:w-3/4 max-w-2xl	rounded py-8 px-12">
+          <div className="text-center">
             {errors.response_error && (
               <p className="text-red-500 text-md">{errors.response_error}</p>
             )}
@@ -139,11 +139,11 @@ export default function Signup() {
             </h2>
           </div>
 
-          <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+          <div className="mt-10">
             <form className="space-y-6" onSubmit={handleFormSubmit}>
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="userType"
                   className="block text-sm/6 font-medium text-gray-900"
                 >
                   Tell us what type of account you'd be opening.
@@ -295,9 +295,9 @@ export default function Signup() {
                 >
                   Country
                 </label>
-                <div>
+                <div className="w-auto">
                   <CountryDropdown
-                    className="outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 "
+                    className="w-full rounded-sm outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 "
                     value={country}
                     onChange={(val) => setCountry(val)}
                   />

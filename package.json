@@ -6,7 +6,7 @@
   "homepage": "/",
   "scripts": {
     "dev": "vite",
-    "build": "rimraf dist && tsc -b && vite build",
+    "build": "npx rimraf dist && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "prod": "npx serve -s dist"

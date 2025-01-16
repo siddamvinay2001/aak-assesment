@@ -1,4 +1,12 @@
-export default function Alert({ isSuccess, message, handleAlert }) {
+export default function Alert({
+  isSuccess,
+  message,
+  handleAlert,
+}: {
+  isSuccess: boolean;
+  message: string;
+  handleAlert: () => void;
+}) {
   const textAlertStyle = isSuccess ? "text-green-400" : "text-red-400";
 
   return (

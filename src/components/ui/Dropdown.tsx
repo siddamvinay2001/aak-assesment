@@ -54,7 +54,6 @@ export default function Dropdown({
         role="menu"
         aria-orientation="vertical"
         aria-labelledby="menu-button"
-        tabIndex="-1"
       >
         {isOpen && (
           <div className="py-1" role="none">

@@ -5,7 +5,7 @@ import { userSchema } from "../zod/userSchema";
 import { z } from "zod";
 import { useRegisterUserMutation } from "../store/authApi";
 import Loader from "../components/ui/Loader";
-import { replace, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Alert from "../components/ui/Alert";
 const items = [
   {
@@ -31,26 +31,24 @@ const items = [
 ];
 
 export default function Signup() {
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // extracting form data
     setErrors({});
-    const formData = new FormData(e.target);
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
     const userData = {
-      first_name: formData.get("first_name"),
-      last_name: formData.get("last_name"),
-      user_type: items[userType].value,
-      username: formData.get("username"),
-      createPassword: formData.get("createPassword"),
-      confirmPassword: formData.get("confirmPassword"),
-      password: formData.get("createPassword"),
-      email: formData.get("email"),
-      country: country,
+      first_name: formData.get("first_name") as string,
+      last_name: formData.get("last_name") as string,
+      user_type: items[userType].value as string,
+      username: formData.get("username") as string,
+      createPassword: formData.get("createPassword") as string,
+      confirmPassword: formData.get("confirmPassword") as string,
+      password: formData.get("createPassword") as string,
+      email: formData.get("email") as string,
+      country: country as string,
     };
     try {
-      //validating data with zod for checking valid email id, and checking other basics as password matching etc
-      const validate = userSchema.parse(userData);
-      const validatedData = JSON.stringify(userData);
+      userSchema.parse(userData);
       const response = await registerUser({ userData }).unwrap();
       if (response.status === "successful") {
         setAlert({
@@ -65,24 +63,34 @@ export default function Signup() {
           message: response.message,
         });
       }
-    } catch (err) {
+    } catch (err: unknown) {
       if (err instanceof z.ZodError) {
-        const formErrors = {};
+        const formErrors: Record<string, string> = {};
         err.errors.forEach((error) => {
           if (error.path[0]) {
             formErrors[error.path[0]] = error.message;
           }
         });
         setErrors(formErrors);
+      } else if (isErrorWithData(err)) {
+        setAlert({
+          showAlert: true,
+          success: false,
+          message: err.data as string,
+        });
       } else {
         setAlert({
           showAlert: true,
           success: false,
-          message: err.data,
+          message: "An unexpected error occurred.",
         });
       }
     }
   };
+
+  function isErrorWithData(err: unknown): err is { data?: string } {
+    return typeof err === "object" && err !== null && "data" in err;
+  }
 
   const [userType, setUserType] = useState<number>(0);
   const [country, setCountry] = useState<string>("");
@@ -103,8 +111,8 @@ export default function Signup() {
       <div className="bg-slate-300 flex min-h-screen flex-1 flex-col items-center justify-center px-6 py-12 lg:px-8">
         {alert.showAlert && (
           <Alert
-            isSuccess={alert.success}
-            message={alert.message}
+            isSuccess={alert.success as boolean}
+            message={alert.message as string}
             handleAlert={
               alert.success
                 ? () => navigate("/login", { replace: true })
